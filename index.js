@@ -11,6 +11,15 @@ const server = http.createServer((req, res) => {
         case '/':
             filePath = path.join(__dirname, 'pages', 'index.html');
             break;
+        case '/index':
+            filePath = path.join(__dirname, 'pages', 'index.html');
+            break;
+        case '/products':
+            filePath = path.join(__dirname, 'pages', 'products.html');
+            break;
+        case '/connect':
+            filePath = path.join(__dirname, 'pages', 'connect.html');
+            break;
         default:
             // 404 not found
             res.writeHead(404);
