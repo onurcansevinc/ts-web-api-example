@@ -49,6 +49,25 @@ const server = http.createServer((req, res) => {
                 res.end(JSON.stringify({ error: 'Internal Server Error' }));
             }
             break;
+
+        case '/oldestEmployee':
+            try {
+                const filePath = path.join(__dirname, 'data', 'employeeList.json');
+                const employees = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+
+                // get the oldest employee
+                const oldestEmployee = employees.reduce((oldest, current) => {
+                    return new Date(current.ise_giris_tarihi) < new Date(oldest.ise_giris_tarihi) ? current : oldest;
+                });
+
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify(oldestEmployee));
+            } catch (error) {
+                res.writeHead(500);
+                res.end(JSON.stringify({ error: 'Internal Server Error' }));
+            }
+            break;
+
         default:
             res.writeHead(404);
             res.end(JSON.stringify({ error: '404 Not Found' }));
