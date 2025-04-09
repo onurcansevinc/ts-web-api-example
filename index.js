@@ -68,6 +68,23 @@ const server = http.createServer((req, res) => {
             }
             break;
 
+        case '/averageSalary':
+            try {
+                const filePath = path.join(__dirname, 'data', 'employeeList.json');
+                const employees = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+
+                // get the average salary
+                // total salary / number of employees
+                const averageSalary = employees.reduce((sum, current) => sum + current.maas, 0) / employees.length;
+
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({ averageSalary: Number(averageSalary.toFixed(2)) }));
+            } catch (error) {
+                res.writeHead(500);
+                res.end(JSON.stringify({ error: 'Internal Server Error' }));
+            }
+            break;
+
         default:
             res.writeHead(404);
             res.end(JSON.stringify({ error: '404 Not Found' }));
