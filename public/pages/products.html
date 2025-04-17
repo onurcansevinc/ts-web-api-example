@@ -19,6 +19,9 @@
 
         <main>
             <h1>Ürünler</h1>
+
+            <div id="products"></div>
+
             <p>
                 Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas id distinctio nam nihil commodi autem fugiat, tempora dolore sapiente soluta.
                 Suscipit error eius quod beatae dolorem consectetur voluptatibus quaerat odio soluta harum, iure similique explicabo et. Veniam, nulla.
@@ -29,4 +32,37 @@
             </p>
         </main>
     </body>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const products = await fetch('/api/top100products');
+            const productsData = await products.json();
+
+            if (productsData.success) {
+                productsData.data.forEach((product) => {
+                    const productDiv = document.createElement('div');
+                    productDiv.classList.add('product');
+                    productDiv.innerHTML = `
+                        <img src="${product.images[0].url}" alt="${product.name}" class="product-image" />
+                        <div class="product-content">
+                            <h2 class="product-title">${product.name}</h2>
+                            <p class="product-description">${product.description}</p>
+                            <div class="product-meta">
+                                <span class="product-price">${product.price}</span>
+                                <span class="product-rating">${product.rating}</span>
+                            </div>
+                        </div>`;
+                    document.getElementById('products')?.appendChild(productDiv);
+                });
+            } else {
+                const errorDiv = document.createElement('div');
+                errorDiv.classList.add('error');
+                errorDiv.innerHTML = `
+                <h2>An error occurred while fetching products</h2>
+                <p>${productsData.error}</p>
+            `;
+                document.getElementById('products')?.appendChild(errorDiv);
+            }
+        });
+    </script>
 </html>
