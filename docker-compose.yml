@@ -1,0 +1,33 @@
+services:
+    # Ana uygulama servisi
+    app:
+        # Dockerfile.dev dosyası kullanarak build et
+        build:
+            context: . # Build context'i (mevcut dizin)
+            dockerfile: Dockerfile # Geliştirme için özel Dockerfile
+
+        # Container içindeki 3000 portunu host makinenin 3000 portuna bağla
+        ports:
+            - '3000:3000'
+
+        # Yerel dosyaları container'a bağla (değişiklikler anında yansısın)
+        volumes:
+            # Kök dizini de bağlayalım ki nodemon.json erişilebilir olsun
+            - ./:/app
+            # node_modules'ı koruyalım
+            - /app/node_modules
+
+        # Environment değişkenleri
+        environment:
+            - NODE_ENV=development # Geliştirme modu
+
+        # Container'ı yeniden başlatma politikası
+        # "always" - hata durumunda her zaman yeniden başlat
+        restart: always
+
+        # Container başlatıldığında çalıştırılacak komut
+        # npm run dev ile nodemon başlat
+        command: npm run dev
+
+        # Container adı
+        container_name: newmind-ai-nodejs-s2-proje
