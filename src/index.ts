@@ -2,11 +2,11 @@ import fs from 'fs';
 import path from 'path';
 import { Employee } from './types/types';
 import http, { IncomingMessage, ServerResponse } from 'http';
-import { sendJsonResponse, readEmployeeList } from './utils';
+import { sendJsonResponse, readEmployeeList, readProductList, fetchTop100Products } from './utils';
 
 const PORT: number = 3000;
 
-const server = http.createServer((req: IncomingMessage, res: ServerResponse) => {
+const server = http.createServer(async (req: IncomingMessage, res: ServerResponse) => {
     let filePath: string | undefined;
     const method: string | undefined = req.method;
 
@@ -57,6 +57,17 @@ const server = http.createServer((req: IncomingMessage, res: ServerResponse) => 
                 const averageSalary = employees.reduce((sum: number, current: Employee) => sum + current.maas, 0) / employees.length;
 
                 sendJsonResponse(res, 200, { success: true, data: { averageSalary: Number(averageSalary.toFixed(2)) }, error: undefined });
+                return;
+            } catch (error) {
+                sendJsonResponse(res, 500, { success: false, data: null, error: 'Internal Server Error' });
+                return;
+            }
+            break;
+
+        case '/api/top100products':
+            try {
+                const products = await fetchTop100Products();
+                sendJsonResponse(res, 200, { success: true, data: products, error: undefined });
                 return;
             } catch (error) {
                 sendJsonResponse(res, 500, { success: false, data: null, error: 'Internal Server Error' });
