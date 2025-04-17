@@ -1,0 +1,198 @@
+{
+	"info": {
+		"_postman_id": "a38f44e3-e962-461f-8bc6-470aac4ea02c",
+		"name": "NewMind AI Bootcamp NodeJS TypeScript API",
+		"description": "Node.js TypeScript API for NewMind AI Bootcamp Sprint2 Project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "13754195"
+	},
+	"item": [
+		{
+			"name": "HTML Pages",
+			"item": [
+				{
+					"name": "Home Page",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}",
+							"host": [
+								"{{base_url}}"
+							]
+						},
+						"description": "Returns the Home page HTML content"
+					},
+					"response": []
+				},
+				{
+					"name": "Products Page",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/products",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"products"
+							]
+						},
+						"description": "Returns the Products page HTML content"
+					},
+					"response": []
+				},
+				{
+					"name": "Contact Page",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/connect",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"connect"
+							]
+						},
+						"description": "Returns the Contact page HTML content"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints for HTML pages"
+		},
+		{
+			"name": "API Endpoints",
+			"item": [
+				{
+					"name": "Employee List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/employeeList",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"employeeList"
+							]
+						},
+						"description": "Returns the employee list without salary information"
+					},
+					"response": []
+				},
+				{
+					"name": "Oldest Employee",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/oldestEmployee",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"oldestEmployee"
+							]
+						},
+						"description": "Returns the employee with the longest tenure"
+					},
+					"response": []
+				},
+				{
+					"name": "Average Salary",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/averageSalary",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"averageSalary"
+							]
+						},
+						"description": "Returns the average salary of all employees"
+					},
+					"response": []
+				},
+				{
+					"name": "Top 100 Products",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/top100products",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"top100products"
+							]
+						},
+						"description": "Returns the top 100 products sorted by rating"
+					},
+					"response": []
+				},
+				{
+					"name": "Weather",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/weather",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"weather"
+							]
+						},
+						"description": "Returns weather information based on IP address"
+					},
+					"response": []
+				}
+			],
+			"description": "API endpoints"
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		}
+	]
+}
