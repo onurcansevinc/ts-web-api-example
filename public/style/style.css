@@ -1,0 +1,90 @@
+body {
+    background-color: #f0f0f0;
+}
+
+header {
+    background: linear-gradient(to right, #2c3e50, #3498db);
+    padding: 1rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+nav {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem;
+}
+
+ul {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+ul li {
+    position: relative;
+}
+
+ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+}
+
+ul li a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+ul li a.active {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+ul li a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 50%;
+    background-color: #fff;
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+}
+
+ul li a:hover::after {
+    width: 80%;
+}
+
+.button {
+    color: #fff;
+    padding: 10px 20px;
+    text-decoration: none;
+    background-color: #0f0f0f;
+}
+
+@media (max-width: 768px) {
+    nav {
+        padding: 0.5rem;
+    }
+
+    ul {
+        gap: 1rem;
+    }
+
+    ul li a {
+        font-size: 1rem;
+        padding: 0.4rem 0.8rem;
+    }
+}

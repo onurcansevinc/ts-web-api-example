@@ -93,6 +93,15 @@ const server = http.createServer((req: IncomingMessage, res: ServerResponse) => 
         }
     }
 
+    // CSS routes
+    if (req.url === '/style/style.css') {
+        filePath = path.join(__dirname, '..', 'public', 'style', 'style.css');
+        const content = fs.readFileSync(filePath as string, 'utf8');
+        res.writeHead(200, { 'Content-Type': 'text/css' });
+        res.end(content);
+        return;
+    }
+
     sendJsonResponse(res, 404, { success: false, data: null, error: '404 Not Found' });
     return;
 });
