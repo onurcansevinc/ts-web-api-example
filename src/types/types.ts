@@ -6,3 +6,9 @@ export interface Employee {
     ise_giris_tarihi: string;
     maas: number;
 }
+
+export interface ApiResponse<T> {
+    success: boolean;
+    data: T;
+    error?: string;
+}

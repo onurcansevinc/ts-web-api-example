@@ -2,6 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { Employee } from './types/types';
 import http, { IncomingMessage, ServerResponse } from 'http';
+import { sendJsonResponse, readEmployeeList } from './utils';
 
 const PORT: number = 3000;
 
@@ -10,59 +11,56 @@ const server = http.createServer((req: IncomingMessage, res: ServerResponse) => 
     const method: string | undefined = req.method;
 
     if (method !== 'GET') {
-        res.writeHead(404);
-        res.end(JSON.stringify({ error: '404 Not Found' }));
+        sendJsonResponse(res, 404, { success: false, data: null, error: 'Method Not Allowed' });
+        return;
     }
+
     // API Endpoints
     switch (req.url) {
         case '/employeeList':
             try {
-                const filePath = path.join(__dirname, '..', 'public', 'data', 'employeeList.json');
-                const employees = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+                const employees = readEmployeeList();
                 const employeesWithoutSalary = employees.map(({ maas, ...employee }: Employee) => employee); // get employees without the 'maas'
 
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-
-                res.end(JSON.stringify(employeesWithoutSalary));
+                sendJsonResponse(res, 200, { success: true, data: employeesWithoutSalary, error: undefined });
+                return;
             } catch (error) {
                 console.error('Error reading employee list:', error);
-                res.writeHead(500);
-                res.end(JSON.stringify({ error: 'Internal Server Error' }));
+                sendJsonResponse(res, 500, { success: false, data: null, error: 'Internal Server Error' });
+                return;
             }
             break;
 
         case '/oldestEmployee':
             try {
-                const filePath = path.join(__dirname, '..', 'public', 'data', 'employeeList.json');
-                const employees = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+                const employees = readEmployeeList();
 
                 // get the oldest employee
                 const oldestEmployee = employees.reduce((oldest: Employee, current: Employee) => {
                     return new Date(current.ise_giris_tarihi) < new Date(oldest.ise_giris_tarihi) ? current : oldest;
                 });
 
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify(oldestEmployee));
+                sendJsonResponse(res, 200, { success: true, data: oldestEmployee, error: undefined });
+                return;
             } catch (error) {
-                res.writeHead(500);
-                res.end(JSON.stringify({ error: 'Internal Server Error' }));
+                sendJsonResponse(res, 500, { success: false, data: null, error: 'Internal Server Error' });
+                return;
             }
             break;
 
         case '/averageSalary':
             try {
-                const filePath = path.join(__dirname, '..', 'public', 'data', 'employeeList.json');
-                const employees = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+                const employees = readEmployeeList();
 
                 // get the average salary
                 // total salary / number of employees
                 const averageSalary = employees.reduce((sum: number, current: Employee) => sum + current.maas, 0) / employees.length;
 
-                res.writeHead(200, { 'Content-Type': 'application/json' });
-                res.end(JSON.stringify({ averageSalary: Number(averageSalary.toFixed(2)) }));
+                sendJsonResponse(res, 200, { success: true, data: { averageSalary: Number(averageSalary.toFixed(2)) }, error: undefined });
+                return;
             } catch (error) {
-                res.writeHead(500);
-                res.end(JSON.stringify({ error: 'Internal Server Error' }));
+                sendJsonResponse(res, 500, { success: false, data: null, error: 'Internal Server Error' });
+                return;
             }
             break;
     }
@@ -82,21 +80,21 @@ const server = http.createServer((req: IncomingMessage, res: ServerResponse) => 
             case '/connect':
                 filePath = path.join(__dirname, '..', 'public', 'pages', 'connect.html');
                 break;
-
-            default:
-                res.writeHead(404);
-                res.end(JSON.stringify({ error: '404 Not Found' }));
         }
 
         try {
             const content = fs.readFileSync(filePath as string, 'utf8');
             res.writeHead(200, { 'Content-Type': 'text/html' });
             res.end(content);
+            return;
         } catch (error: unknown) {
-            res.writeHead(500);
-            res.end('Internal Server Error');
+            sendJsonResponse(res, 500, { success: false, data: null, error: 'Internal Server Error' });
+            return;
         }
     }
+
+    sendJsonResponse(res, 404, { success: false, data: null, error: '404 Not Found' });
+    return;
 });
 
 server.listen(PORT, () => {
