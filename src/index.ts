@@ -1,19 +1,25 @@
-const fs = require('fs');
-const path = require('path');
-const http = require('http');
+import fs from 'fs';
+import path from 'path';
+import { Employee } from './types/types';
+import http, { IncomingMessage, ServerResponse } from 'http';
 
-const PORT = 3000;
+const PORT: number = 3000;
 
-const server = http.createServer((req, res) => {
-    let filePath;
+const server = http.createServer((req: IncomingMessage, res: ServerResponse) => {
+    let filePath: string | undefined;
+    const method: string | undefined = req.method;
 
+    if (method !== 'GET') {
+        res.writeHead(404);
+        res.end(JSON.stringify({ error: '404 Not Found' }));
+    }
     // API Endpoints
     switch (req.url) {
         case '/employeeList':
             try {
-                const filePath = path.join(__dirname, 'data', 'employeeList.json');
+                const filePath = path.join(__dirname, '..', 'public', 'data', 'employeeList.json');
                 const employees = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-                const employeesWithoutSalary = employees.map(({ maas, ...employee }) => employee); // get employees without the 'maas'
+                const employeesWithoutSalary = employees.map(({ maas, ...employee }: Employee) => employee); // get employees without the 'maas'
 
                 res.writeHead(200, { 'Content-Type': 'application/json' });
 
@@ -27,11 +33,11 @@ const server = http.createServer((req, res) => {
 
         case '/oldestEmployee':
             try {
-                const filePath = path.join(__dirname, 'data', 'employeeList.json');
+                const filePath = path.join(__dirname, '..', 'public', 'data', 'employeeList.json');
                 const employees = JSON.parse(fs.readFileSync(filePath, 'utf8'));
 
                 // get the oldest employee
-                const oldestEmployee = employees.reduce((oldest, current) => {
+                const oldestEmployee = employees.reduce((oldest: Employee, current: Employee) => {
                     return new Date(current.ise_giris_tarihi) < new Date(oldest.ise_giris_tarihi) ? current : oldest;
                 });
 
@@ -45,12 +51,12 @@ const server = http.createServer((req, res) => {
 
         case '/averageSalary':
             try {
-                const filePath = path.join(__dirname, 'data', 'employeeList.json');
+                const filePath = path.join(__dirname, '..', 'public', 'data', 'employeeList.json');
                 const employees = JSON.parse(fs.readFileSync(filePath, 'utf8'));
 
                 // get the average salary
                 // total salary / number of employees
-                const averageSalary = employees.reduce((sum, current) => sum + current.maas, 0) / employees.length;
+                const averageSalary = employees.reduce((sum: number, current: Employee) => sum + current.maas, 0) / employees.length;
 
                 res.writeHead(200, { 'Content-Type': 'application/json' });
                 res.end(JSON.stringify({ averageSalary: Number(averageSalary.toFixed(2)) }));
@@ -65,16 +71,16 @@ const server = http.createServer((req, res) => {
     if (req.url === '/' || req.url === '/index' || req.url === '/products' || req.url === '/connect') {
         switch (req.url) {
             case '/':
-                filePath = path.join(__dirname, 'pages', 'index.html');
+                filePath = path.join(__dirname, '..', 'public', 'pages', 'index.html');
                 break;
             case '/index':
-                filePath = path.join(__dirname, 'pages', 'index.html');
+                filePath = path.join(__dirname, '..', 'public', 'pages', 'index.html');
                 break;
             case '/products':
-                filePath = path.join(__dirname, 'pages', 'products.html');
+                filePath = path.join(__dirname, '..', 'public', 'pages', 'products.html');
                 break;
             case '/connect':
-                filePath = path.join(__dirname, 'pages', 'connect.html');
+                filePath = path.join(__dirname, '..', 'public', 'pages', 'connect.html');
                 break;
 
             default:
@@ -83,10 +89,10 @@ const server = http.createServer((req, res) => {
         }
 
         try {
-            const content = fs.readFileSync(filePath, 'utf8');
+            const content = fs.readFileSync(filePath as string, 'utf8');
             res.writeHead(200, { 'Content-Type': 'text/html' });
             res.end(content);
-        } catch (error) {
+        } catch (error: unknown) {
             res.writeHead(500);
             res.end('Internal Server Error');
         }
