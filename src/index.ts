@@ -1,9 +1,12 @@
 import fs from 'fs';
 import path from 'path';
+import dotenv from 'dotenv';
 import geoip from 'geoip-lite';
-import { Employee } from './types/types';
+import { Employee, WeatherAPIResponse, Weather } from './types/types';
 import http, { IncomingMessage, ServerResponse } from 'http';
-import { sendJsonResponse, readEmployeeList, fetchTop100Products, getMyPublicIp } from './utils';
+import { sendJsonResponse, readEmployeeList, fetchTop100Products, getMyPublicIp, getWeather } from './utils';
+
+dotenv.config();
 
 const PORT: number = 3000;
 
@@ -26,7 +29,6 @@ const server = http.createServer(async (req: IncomingMessage, res: ServerRespons
                 sendJsonResponse(res, 200, { success: true, data: employeesWithoutSalary, error: undefined });
                 return;
             } catch (error) {
-                console.error('Error reading employee list:', error);
                 sendJsonResponse(res, 500, { success: false, data: null, error: 'Internal Server Error' });
                 return;
             }
@@ -82,7 +84,15 @@ const server = http.createServer(async (req: IncomingMessage, res: ServerRespons
                 if (ip == '::1') ip = await getMyPublicIp(); // if the ip is localhost, get the public ip
 
                 const geo = geoip.lookup(ip as string); // get the geo location of the ip
-                sendJsonResponse(res, 200, { success: true, data: geo, error: undefined });
+                const weather: WeatherAPIResponse = await getWeather(ip as string, geo?.ll[0] as number, geo?.ll[1] as number);
+
+                const weatherData: Weather = {
+                    city: geo?.city || '',
+                    temperature: weather.main.temp,
+                    condition: weather.weather[0].main,
+                };
+
+                sendJsonResponse(res, 200, { success: true, data: weatherData, error: undefined });
                 return;
             } catch (error) {
                 sendJsonResponse(res, 500, { success: false, data: null, error: 'Internal Server Error' });
