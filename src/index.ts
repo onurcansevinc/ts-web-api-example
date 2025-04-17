@@ -80,8 +80,8 @@ const server = http.createServer(async (req: IncomingMessage, res: ServerRespons
 
         case '/api/weather':
             try {
-                let ip: string | undefined | string[] = req.connection.remoteAddress || req.headers['x-forwarded-for'];
-                if (ip == '::1') ip = await getMyPublicIp(); // if the ip is localhost, get the public ip
+                let ip: string | undefined | string[] = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+                if (typeof ip === 'string' && ip?.startsWith('::')) ip = await getMyPublicIp(); // if the ip is localhost, get the public ip
 
                 const geo = geoip.lookup(ip as string); // get the geo location of the ip
                 const weather: WeatherAPIResponse = await getWeather(ip as string, geo?.ll[0] as number, geo?.ll[1] as number);
@@ -95,7 +95,7 @@ const server = http.createServer(async (req: IncomingMessage, res: ServerRespons
                 sendJsonResponse(res, 200, { success: true, data: weatherData, error: undefined });
                 return;
             } catch (error) {
-                sendJsonResponse(res, 500, { success: false, data: null, error: 'Internal Server Error' });
+                sendJsonResponse(res, 500, { success: false, data: null, error: 'Internal Server Error' + error });
                 return;
             }
             break;
