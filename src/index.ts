@@ -17,7 +17,7 @@ const server = http.createServer((req: IncomingMessage, res: ServerResponse) => 
 
     // API Endpoints
     switch (req.url) {
-        case '/employeeList':
+        case '/api/employeeList':
             try {
                 const employees = readEmployeeList();
                 const employeesWithoutSalary = employees.map(({ maas, ...employee }: Employee) => employee); // get employees without the 'maas'
@@ -31,7 +31,7 @@ const server = http.createServer((req: IncomingMessage, res: ServerResponse) => 
             }
             break;
 
-        case '/oldestEmployee':
+        case '/api/oldestEmployee':
             try {
                 const employees = readEmployeeList();
 
@@ -48,7 +48,7 @@ const server = http.createServer((req: IncomingMessage, res: ServerResponse) => 
             }
             break;
 
-        case '/averageSalary':
+        case '/api/averageSalary':
             try {
                 const employees = readEmployeeList();
 
