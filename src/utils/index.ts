@@ -58,3 +58,13 @@ export async function fetchTop100Products(): Promise<Product[]> {
         throw error;
     }
 }
+
+export async function getMyPublicIp(): Promise<string> {
+    try {
+        const response = await axios.get('https://api.ipify.org?format=json');
+        return response.data.ip;
+    } catch (error) {
+        console.error("Couldn't get my public IP:", error);
+        return '8.8.8.8'; // Fallback IP
+    }
+}

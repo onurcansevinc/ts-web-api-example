@@ -1,8 +1,9 @@
 import fs from 'fs';
 import path from 'path';
+import geoip from 'geoip-lite';
 import { Employee } from './types/types';
 import http, { IncomingMessage, ServerResponse } from 'http';
-import { sendJsonResponse, readEmployeeList, readProductList, fetchTop100Products } from './utils';
+import { sendJsonResponse, readEmployeeList, fetchTop100Products, getMyPublicIp } from './utils';
 
 const PORT: number = 3000;
 
@@ -68,6 +69,20 @@ const server = http.createServer(async (req: IncomingMessage, res: ServerRespons
             try {
                 const products = await fetchTop100Products();
                 sendJsonResponse(res, 200, { success: true, data: products, error: undefined });
+                return;
+            } catch (error) {
+                sendJsonResponse(res, 500, { success: false, data: null, error: 'Internal Server Error' });
+                return;
+            }
+            break;
+
+        case '/api/weather':
+            try {
+                let ip: string | undefined | string[] = req.connection.remoteAddress || req.headers['x-forwarded-for'];
+                if (ip == '::1') ip = await getMyPublicIp(); // if the ip is localhost, get the public ip
+
+                const geo = geoip.lookup(ip as string); // get the geo location of the ip
+                sendJsonResponse(res, 200, { success: true, data: geo, error: undefined });
                 return;
             } catch (error) {
                 sendJsonResponse(res, 500, { success: false, data: null, error: 'Internal Server Error' });
