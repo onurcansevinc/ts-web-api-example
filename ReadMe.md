@@ -1,51 +1,57 @@
-# Sprint 1 Proje Çalışması
+# NodeJS Web Server Project
 
-## Task 1: Project Setup
+## Project Overview
 
--   NodeJS HTTP modülü kullanarak yeni bir web server package oluştur.
--   `nodemon` kütüphanesini ekle
--   `package.json` içerisine `dev` komutu ekle. Proje `npm run dev` komutu ile nodemon tarafından çalıştırılmalı.
+This project is a simple web server built using NodeJS HTTP module. It includes HTML pages and API endpoints for employee data management.
 
-## Task 2: HTML Pages
+## Features
 
-Uygulamada 3 tane HTML sayfası olmalı
+-   Web server with multiple HTML pages
+-   Employee data API endpoints
+-   Nodemon integration for development
 
-1. Ana Sayfa (index.html) <br />
+## Setup Instructions
 
--   Uygulama ilk açıldığında bu sayfa gelmeli [http://localhost:3000](http://localhost:3000/)
--   [Ana Sayfa](http://localhost:3000/) | [Ürünler](http://localhost:3000/products) | [İletişim](http://localhost:3000/connect) linklerinden oluşan bir header menüsü olmalı (stillendirme önemli değil ve bu menü tüm sayfalarda olmalı)
-    -   Ana Sayfa: http://localhost:3000/
-    -   Ürünler: http://localhost:3000/products
-    -   İletişim: http://localhost:3000/connect
--   İçerik olarak dummy conent eklenebilir.
+1. Install dependencies:
 
-2. Ürünler (products.html)
+```bash
+npm install
+```
 
--   Products URLi products.html sayfasını getirmeli [http://localhost:3000/products](http://localhost:3000/products)
--   [Ana Sayfa](http://localhost:3000/) | [Ürünler](http://localhost:3000/products) | [İletişim](http://localhost:3000/connect) linklerinden oluşan bir header menüsü olmalı (stillendirme önemli değil ve bu menü tüm sayfalarda olmalı)
--   İçerik olarak dummy conent eklenebilir.
+2. Start development server:
 
-3. İletişim (contact.html)
+```bash
+npm run dev
+```
 
--   Contact URLi contact.html sayfasını getirmeli [http://localhost:3000/contact](http://localhost:3000/contact)
--   [Ana Sayfa](http://localhost:3000/) | [Ürünler](http://localhost:3000/products) | [İletişim](http://localhost:3000/connect) linklerinden oluşan bir header menüsü olmalı (stillendirme önemli değil ve bu menü tüm sayfalarda olmalı)
--   İçerik olarak dummy conent eklenebilir.
+The server will start at http://localhost:3000
 
-## Task 3: API Endpoints ⚡
+## Project Structure
 
-Bu görevde `employeeList.json` dosyası içerisindeki datalar kullanılacak. Aşağıda belirtilen endpointlere istek atıldığı zaman `JSON` formatında data dönülmesi gerekiyor.
+### HTML Pages
 
-1. [http://localhost:3000/employeeList](http://localhost:3000/employeeList) <br />
-   Tüm listeyi maaş bilgisi olmadan `JSON` formatında döndürmeli.
+-   Home Page: http://localhost:3000/
+-   Products Page: http://localhost:3000/products
+-   Contact Page: http://localhost:3000/contact
 
-2. [http://localhost:3000/oldestEmployee](http://localhost:3000/oldestEmployee) <br />
-   En kıdemli çalışan bilgisini `JSON` formatında döndürmeli.
+### API Endpoints
 
-3. [http://localhost:3000/averageSalary](http://localhost:3000/averageSalary) <br />
-   Çalışanların maaş ortalaması bilgisini döndürmeli.
+1. Get All Employees
 
-## Task 4: Push to GitLab
+-   Endpoint: http://localhost:3000/employeeList
+-   Returns: JSON list of employees (without salary information)
 
--   Yapılan tüm çalışmalar kişisel GitLab hesabınızda remote repository ye yüklenmeli.
+2. Get Oldest Employee
 
-**☝ RULE:** Yapılan herbir minor değişiklik ayrı ayrı commitlenmeli
+-   Endpoint: http://localhost:3000/oldestEmployee
+-   Returns: JSON data of the most senior employee
+
+3. Get Average Salary
+
+-   Endpoint: http://localhost:3000/averageSalary
+-   Returns: Average salary of all employees
+
+## Development
+
+-   Uses nodemon for automatic server restart during development
+-   Run `npm run dev` to start the development server
